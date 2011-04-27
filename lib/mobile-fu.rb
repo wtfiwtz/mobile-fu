@@ -1,20 +1,20 @@
 require 'rails'
+require 'rack/mobile-detect'
 
 module MobileFu
   autoload :Helper, 'mobile-fu/helper'
   autoload :MobilizedStyles, 'mobile-fu/mobilized_styles'
+
+  class Railtie < Rails::Railtie
+    initializer "mobile-fu.configure" do |app|
+      app.config.middleware.use Rack::MobileDetect
+    end
+    Mime::Type.register_alias "text/html", :mobile
+  end
 end
 
 module ActionController
   module MobileFu
-    # These are various strings that can be found in mobile devices.  Please feel free
-    # to add on to this list.
-    MOBILE_USER_AGENTS =  'palm|blackberry|nokia|phone|midp|mobi|symbian|chtml|ericsson|minimo|' +
-                          'audiovox|motorola|samsung|telit|upg1|windows ce|ucweb|astel|plucker|' +
-                          'x320|x240|j2me|sgh|portable|sprint|docomo|kddi|softbank|android|mmp|' +
-                          'pdxgw|netfront|xiino|vodafone|portalmmm|sagem|mot-|sie-|ipod|up\\.b|' +
-                          'webos|amoi|novarra|cdm|alcatel|pocket|ipad|iphone|mobileexplorer|' +
-                          'mobile'
 
     def self.included(base)
       base.extend ClassMethods
@@ -42,6 +42,7 @@ module ActionController
         helper_method :is_mobile_device?
         helper_method :in_mobile_view?
         helper_method :is_device?
+        helper_method :mobile_device
       end
 
       def is_mobile_device?
@@ -89,7 +90,11 @@ module ActionController
       # the device making the request is matched to a device in our regex.
 
       def is_mobile_device?
-        request.user_agent.to_s.downcase =~ Regexp.new(ActionController::MobileFu::MOBILE_USER_AGENTS)
+        !!mobile_device
+      end
+
+      def mobile_device
+        request.headers['X_MOBILE_DEVICE']
       end
 
       # Can check for a specific user agent
