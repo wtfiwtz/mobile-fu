@@ -34,10 +34,9 @@ module ActionController
       #      has_mobile_fu true
       #    end
 
-      def has_mobile_fu(test_mode = nil, &test_mode_block)
+      def has_mobile_fu(test_mode = nil)
+        raise ArgumentError, "test_mode argument to has_mobile_fu is no longer supported, please invoke set_device_type as or in a before_filter instead" unless test_mode.nil?
         include ActionController::MobileFu::InstanceMethods
-        @@test_mode = test_mode || block
-        before_filter :set_device_type
         
         helper_method :is_mobile_device?
         helper_method :in_mobile_view?
@@ -47,18 +46,8 @@ module ActionController
     end
 
     module InstanceMethods
-
-      def set_device_type
-        # see if we want to force mobile
-        force_mobile = if @@test_mode.is_a?(Proc)
-          @@test_mode.call
-        elsif (@@test_mode.is_a?(String) || @@test_mode.is_a?(Symbol)) && self.respond_to?(@@test_mode)
-          self.send(@@test_mode)
-        else
-          @@test_mode
-        end
-        
-        force_mobile ? :force_mobile_format : :set_mobile_format
+      def set_device_type(force_mobile = false)
+        force_mobile ? force_mobile_format : set_mobile_format
       end
 
       # Forces the request format to be :mobile
@@ -104,7 +93,6 @@ module ActionController
         request.user_agent.to_s.downcase.include? type.to_s.downcase
       end
     end
-
   end
 
 end
