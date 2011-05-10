@@ -44,18 +44,6 @@ module ActionController
         helper_method :is_device?
         helper_method :mobile_device
       end
-
-      def is_mobile_device?
-        @@is_mobile_device
-      end
-
-      def in_mobile_view?
-        @@in_mobile_view
-      end
-
-      def is_device?(type)
-        @@is_device
-      end
     end
 
     module InstanceMethods
