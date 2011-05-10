@@ -69,6 +69,8 @@ module ActionController
         else
           @@test_mode
         end
+        
+        force_mobile ? :force_mobile_format : :set_mobile_format
       end
 
       # Forces the request format to be :mobile
