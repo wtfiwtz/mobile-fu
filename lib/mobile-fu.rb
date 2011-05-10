@@ -34,11 +34,11 @@ module ActionController
       #      has_mobile_fu true
       #    end
 
-      def has_mobile_fu(test_mode = false)
+      def has_mobile_fu(test_mode = nil, &test_mode_block)
         include ActionController::MobileFu::InstanceMethods
-
-        before_filter test_mode ? :force_mobile_format : :set_mobile_format
-
+        @@test_mode = test_mode || block
+        before_filter :set_device_type
+        
         helper_method :is_mobile_device?
         helper_method :in_mobile_view?
         helper_method :is_device?
@@ -60,8 +60,18 @@ module ActionController
 
     module InstanceMethods
 
-      # Forces the request format to be :mobile
+      def set_device_type
+        # see if we want to force mobile
+        force_mobile = if @@test_mode.is_a?(Proc)
+          @@test_mode.call
+        elsif (@@test_mode.is_a?(String) || @@test_mode.is_a?(Symbol)) && self.respond_to?(@@test_mode)
+          self.send(@@test_mode)
+        else
+          @@test_mode
+        end
+      end
 
+      # Forces the request format to be :mobile
       def force_mobile_format
         unless request.xhr?
           request.format = :mobile
