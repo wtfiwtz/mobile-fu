@@ -28,16 +28,19 @@ module ActionController
       #      has_mobile_fu
       #    end
       #
-      # You can also force mobile mode by passing in 'true'
+      # If you don't want mobile_fu to set the device type automatically,
+      # you cal pass false here.
       #
       #    class ApplicationController < ActionController::Base
-      #      has_mobile_fu true
+      #      has_mobile_fu false
       #    end
+      #
 
-      def has_mobile_fu(test_mode = nil)
-        raise ArgumentError, "test_mode argument to has_mobile_fu is no longer supported, please invoke set_device_type as or in a before_filter instead" unless test_mode.nil?
+      def has_mobile_fu(set_device_type = false)
         include ActionController::MobileFu::InstanceMethods
-        
+
+        before_filter :set_device_type if set_device_type
+
         helper_method :is_mobile_device?
         helper_method :in_mobile_view?
         helper_method :is_device?
