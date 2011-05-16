@@ -28,18 +28,18 @@ module ActionController
       #      has_mobile_fu
       #    end
       #
-      # If you don't want mobile_fu to set the device type automatically,
-      # you cal pass false here.
+      # If you don't want mobile_fu to set the request format automatically,
+      # you can pass false here.
       #
       #    class ApplicationController < ActionController::Base
       #      has_mobile_fu false
       #    end
       #
 
-      def has_mobile_fu(set_device_type = false)
+      def has_mobile_fu(set_request_format = true)
         include ActionController::MobileFu::InstanceMethods
 
-        before_filter :set_device_type if set_device_type
+        before_filter :set_request_format if set_request_format
 
         helper_method :is_mobile_device?
         helper_method :in_mobile_view?
@@ -49,9 +49,10 @@ module ActionController
     end
 
     module InstanceMethods
-      def set_device_type(force_mobile = false)
+      def set_request_format(force_mobile = false)
         force_mobile ? force_mobile_format : set_mobile_format
       end
+      alias :set_device_type :set_request_format
 
       # Forces the request format to be :mobile
       def force_mobile_format
