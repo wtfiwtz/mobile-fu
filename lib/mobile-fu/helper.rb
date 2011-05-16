@@ -9,9 +9,13 @@ module MobileFu
       sources.each do |source|
         mobilized_sources << source
 
-        possible_source = "#{source.to_s.gsub '.css', ''}_#{mobile_device}.css"
-        path = File.join config.stylesheets_dir, possible_source
-        mobilized_sources << possible_source if File.exist?(path)
+        device_names = is_mobile_device? ? ['mobile', mobile_device.downcase] : []
+
+        device_names.compact.each do |device_name|
+          possible_source = "#{source.to_s.gsub '.css', ''}_#{device_name}.css"
+          path = File.join config.stylesheets_dir, possible_source
+          mobilized_sources << possible_source if File.exist?(path)
+        end
       end
 
       stylesheet_link_tag_without_mobilization *mobilized_sources
