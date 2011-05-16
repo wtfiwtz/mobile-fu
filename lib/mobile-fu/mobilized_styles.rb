@@ -5,7 +5,7 @@ module MobileFu
     # with modification to work for mobile browsers.
 
     def device_name
-      @device_name ||= headers['X_MOBILE_DEVICE']
+      @device_name ||= request.headers['X_MOBILE_DEVICE']
     end
 
     def stylesheet_link_tag_with_mobilization(*sources)
