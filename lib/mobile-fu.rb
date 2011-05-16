@@ -3,7 +3,6 @@ require 'rack/mobile-detect'
 
 module MobileFu
   autoload :Helper, 'mobile-fu/helper'
-  autoload :MobilizedStyles, 'mobile-fu/mobilized_styles'
 
   class Railtie < Rails::Railtie
     initializer "mobile-fu.configure" do |app|
@@ -35,7 +34,6 @@ module ActionController
       #      has_mobile_fu false
       #    end
       #
-
       def has_mobile_fu(set_request_format = true)
         include ActionController::MobileFu::InstanceMethods
 
@@ -102,3 +100,5 @@ module ActionController
 end
 
 ActionController::Base.send :include, ActionController::MobileFu
+ActionView::Base.send :include, MobileFu::Helper
+ActionView::Base.send :alias_method_chain, :stylesheet_link_tag, :mobilization
