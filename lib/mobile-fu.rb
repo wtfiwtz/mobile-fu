@@ -70,6 +70,11 @@ module ActionController
       #     
       #     def show
       #       # Mobile format will be set as normal here if user is on a mobile device
+      #     end
+      #   end
+      def has_no_mobile_fu_for(*actions)
+        @mobile_exempt_actions = actions
+      end
     end
 
     module InstanceMethods
