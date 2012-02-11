@@ -130,7 +130,7 @@ module ActionController
       def is_mobile_device?
         !!mobile_device
       end
-      
+
       def is_tablet_device?
         request.user_agent.to_s.downcase =~ Regexp.new(ActionController::MobileFu::TABLET_USER_AGENTS)
       end
