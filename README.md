@@ -33,11 +33,15 @@ Then add the line below to config/initializers/mime_types.rb
 I recommend that you setup a before_filter that will redirect to a specific page
 depending on whether or not it is a mobile request.  How can you check this?
 
-    is_mobile_device? # => Returns true or false depending on the device
+    is_mobile_device? # => Returns true or false depending on the device or
+
+    is_tablet_device? # => Returns true if the device is a tablet
 
 You can also determine which format is currently set in by calling the following:
 
-    in_mobile_view? # => Returns true or false depending on current req. format
+    in_mobile_view? # => Returns true or false depending on current req. format or
+
+    in_tablet_view? # => Returns true if the current req. format is for tablet view
 
 Also, if you want the ability to allow a user to switch between 'mobile' and
 'standard' format (:html), you can just adjust the mobile_view session variable
@@ -87,5 +91,11 @@ mobile device emulator, or you can call `force_mobile_format` in a before filter
       before_filter :force_mobile_format
     end
 
+You can also force the tablet view by calling `force_tablet_format` instead
+
+    class ApplicationController < ActionController::Base
+      has_mobile_fu
+      before_filter :force_tablet_format
+    end
 
 Copyright (c) 2008 Brendan G. Lim, Intridea, Inc., released under the MIT license

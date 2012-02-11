@@ -97,6 +97,14 @@ module ActionController
           session[:mobile_view] = true if session[:mobile_view].nil?
         end
       end
+      
+      # Forces the request format to be :tablet
+      def force_tablet_format
+        unless request.xhr?
+          request.format = :tablet
+          session[:tablet_view] = true if session[:tablet_view].nil?
+        end
+      end
 
       # Determines the request format based on whether the device is mobile or if
       # the user has opted to use either the 'Standard' view or 'Mobile' view.
@@ -105,6 +113,16 @@ module ActionController
         if !mobile_exempt? && is_mobile_device? && !request.xhr?
           request.format = session[:mobile_view] == false ? :html : :mobile
           session[:mobile_view] = true if session[:mobile_view].nil?
+        end
+      end
+
+      # Determines the request format based on whether the device is tablet or if
+      # the user has opted to use either the 'Standard' view or 'Tablet' view.
+
+      def set_tablet_format
+        if !mobile_exempt? && is_tablet_device? && !request.xhr?
+          request.format = session[:tablet_view] == false ? :html : :tablet
+          session[:tablet_view] = true if session[:tablet_view].nil?
         end
       end
 
