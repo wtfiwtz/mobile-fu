@@ -4,7 +4,7 @@ Mobile Fu
 Want to automatically detect mobile devices that access your Rails application?
 Mobile Fu allows you to do just that.  People can access your site from a Palm,
 Blackberry, iPhone, iPad, Nokia, etc. and it will automatically adjust the format
-of the request from :html to :mobile.
+of the request from :html to :mobile or :tablet.
 
 Installation
 ------------
@@ -48,6 +48,9 @@ Also, if you want the ability to allow a user to switch between 'mobile' and
 in a custom controller action.
 
     session[:mobile_view] # => Set to true if request format is :mobile and false
+                               if set to :html
+
+    session[:tablet_view] # => Set to true if request format is :tablet and false
                                if set to :html
 
 So, different devices need different styling.  Don't worry, we've got this

@@ -97,7 +97,7 @@ module ActionController
           session[:mobile_view] = true if session[:mobile_view].nil?
         end
       end
-      
+
       # Forces the request format to be :tablet
       def force_tablet_format
         unless request.xhr?
