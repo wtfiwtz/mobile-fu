@@ -31,6 +31,15 @@ end
 
 module ActionController
   module MobileFu
+    # These are various strings that can be found in mobile devices.  Please feel free
+        # to add on to this list.
+        MOBILE_USER_AGENTS =  'palm|blackberry|nokia|phone|midp|mobi|symbian|chtml|ericsson|minimo|' +
+                              'audiovox|motorola|samsung|telit|upg1|windows ce|ucweb|astel|plucker|' +
+                              'x320|x240|j2me|sgh|portable|sprint|docomo|kddi|softbank|android|mmp|' +
+                              'pdxgw|netfront|xiino|vodafone|portalmmm|sagem|mot-|sie-|ipod|up\\.b|' +
+                              'webos|amoi|novarra|cdm|alcatel|pocket|ipad|iphone|mobileexplorer|' +
+                              'mobile'
+
     # These are various strings that can be found in tablet devices.  Please feel free
     # to add on to this list.
     TABLET_USER_AGENTS =  'ipad|android 3.0|xoom|sch-i800|playbook|tablet|kindle'
@@ -107,20 +116,14 @@ module ActionController
       end
 
       # Determines the request format based on whether the device is mobile or if
-      # the user has opted to use either the 'Standard' view or 'Mobile' view.
+      # the user has opted to use either the 'Standard' view or 'Mobile' view or
+      # 'Tablet' view.
 
       def set_mobile_format
         if !mobile_exempt? && is_mobile_device? && !request.xhr?
           request.format = session[:mobile_view] == false ? :html : :mobile
           session[:mobile_view] = true if session[:mobile_view].nil?
-        end
-      end
-
-      # Determines the request format based on whether the device is tablet or if
-      # the user has opted to use either the 'Standard' view or 'Tablet' view.
-
-      def set_tablet_format
-        if !mobile_exempt? && is_tablet_device? && !request.xhr?
+        elsif !mobile_exempt? && is_tablet_device? && !request.xhr?
           request.format = session[:tablet_view] == false ? :html : :tablet
           session[:tablet_view] = true if session[:tablet_view].nil?
         end
