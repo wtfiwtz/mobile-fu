@@ -32,7 +32,7 @@ helper functions, pass false as an argument.
 
 ```ruby
 class ApplicationController < ActionController::Base
-  has_mobile_fu(false)
+  has_mobile_fu false
 end
 ```
 
