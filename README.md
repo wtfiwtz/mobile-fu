@@ -80,7 +80,7 @@ is making the request.
 e.g., Accessing a page from a Blackberry.
 
 ```ruby
-stylesheet_link_tag 'mobile.css' ...
+stylesheet_link_tag 'mobile.css'
 ```
 
 This loads mobile.css, and mobile_blackberry.css if the file exists.
