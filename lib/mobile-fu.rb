@@ -190,13 +190,20 @@ module ActionView
 
   class Resolver
     
-    def cached(key, prefix, name, partial)
+    def cached(key, path_info, details, locals)
       return yield unless key && caching?
       cache_content = yield
       if cache_content.empty?
         []
       else
-        @cached[key][prefix][name][partial] ||= cache_content
+        if key
+          @cache.cache(key, name, prefix, partial, locals) do
+            decorate(yield, path_info, details, locals)
+          end
+        else
+          decorate(yield, path_info, details, locals)
+        end
+        #@cached[key][prefix][name][partial] ||= cache_content
       end
     end
   end 
