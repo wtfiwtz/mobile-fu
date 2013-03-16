@@ -190,22 +190,28 @@ module ActionView
 
   class Resolver
     
-    def cached(key, path_info, details, locals)
-      return yield unless key && caching?
-      cache_content = yield
-      if cache_content.empty?
-        []
+    def cached(key, path_info, details, locals) #:nodoc:
+      name, prefix, partial = path_info
+      locals = locals.map { |x| x.to_s }.sort!
+
+      if key && caching?
+        @cached[key][name][prefix][partial][locals] ||= decorate(yield, path_info, details, locals)
       else
-        if key
-          @cache.cache(key, name, prefix, partial, locals) do
-            decorate(yield, path_info, details, locals)
-          end
+        fresh = decorate(yield, path_info, details, locals)
+        return fresh unless key
+
+        scope = @cached[key][name][prefix][partial]
+        cache = scope[locals]
+        mtime = cache && cache.map(&:updated_at).max
+
+        if !mtime || fresh.empty?  || fresh.any? { |t| t.updated_at > mtime }
+          scope[locals] = fresh
         else
-          decorate(yield, path_info, details, locals)
+          cache
         end
-        #@cached[key][prefix][name][partial] ||= cache_content
       end
     end
+
   end 
 
 
