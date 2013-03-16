@@ -195,7 +195,12 @@ module ActionView
       locals = locals.map { |x| x.to_s }.sort!
 
       if key && caching?
-        @cached[key][name][prefix][partial][locals] ||= decorate(yield, path_info, details, locals)
+        if @cached[key][name][prefix][partial][locals].nil?
+          fresh = decorate(yield, path_info, details, locals)
+          return [] if fresh.empty?
+        end
+        @cached[key][name][prefix][partial][locals] ||= fresh
+
       else
         fresh = decorate(yield, path_info, details, locals)
         return fresh unless key
