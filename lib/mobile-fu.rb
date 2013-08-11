@@ -188,34 +188,36 @@ module ActionView
     alias_method_chain :find, :default_template
   end
 
-  class Resolver
-    
-    def cached(key, path_info, details, locals) #:nodoc:
-      name, prefix, partial = path_info
-      locals = locals.map { |x| x.to_s }.sort!
+# ONLY REQUIRED FOR RAILS 3.1.x!
 
-      if key && caching?
-        if @cached[key][name][prefix][partial][locals].nil?
-          fresh = decorate(yield, path_info, details, locals)
-          return [] if fresh.empty?
-        end
-        @cached[key][name][prefix][partial][locals] ||= fresh
-
-      else
-        fresh = decorate(yield, path_info, details, locals)
-        return fresh unless key
-
-        scope = @cached[key][name][prefix][partial]
-        cache = scope[locals]
-        mtime = cache && cache.map(&:updated_at).max
-
-        if !mtime || fresh.empty?  || fresh.any? { |t| t.updated_at > mtime }
-          scope[locals] = fresh
-        else
-          cache
-        end
-      end
-    end
+#  class Resolver
+#    
+#    def cached(key, path_info, details, locals) #:nodoc:
+#      name, prefix, partial = path_info
+#      locals = locals.map { |x| x.to_s }.sort!
+#
+#      if key && caching?
+#        if @cached[key][name][prefix][partial][locals].nil?
+#          fresh = decorate(yield, path_info, details, locals)
+#          return [] if fresh.empty?
+#        end
+#        @cached[key][name][prefix][partial][locals] ||= fresh
+#
+#      else
+#        fresh = decorate(yield, path_info, details, locals)
+#        return fresh unless key
+#
+#        scope = @cached[key][name][prefix][partial]
+#        cache = scope[locals]
+#        mtime = cache && cache.map(&:updated_at).max
+#
+#        if !mtime || fresh.empty?  || fresh.any? { |t| t.updated_at > mtime }
+#          scope[locals] = fresh
+#        else
+#          cache
+#        end
+#      end
+#    end
 
   end 
 
